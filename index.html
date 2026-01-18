@@ -104,13 +104,13 @@
             const top30 = ownershipData.slice(0, 30);
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-6">
                     <div className="max-w-6xl mx-auto">
-                        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 text-center px-4">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 text-center px-2">
                             Топ-30 владельцев комьюнити
                         </h1>
-                        <p className="text-slate-400 text-center mb-6 md:mb-8 text-xs sm:text-sm px-4">
-                            Хаусов + Проектов: 40 • Стандарт: 1% = 0.025% • Премиум: 1% = 0.05% • PFTT: 1% = 0.1%
+                        <p className="text-slate-400 text-center mb-4 sm:mb-6 md:mb-8 text-[10px] sm:text-xs md:text-sm px-2 leading-relaxed">
+                            Хаусов + Проектов: 40 • Стандарт: 1% = 0.025%<br className="sm:hidden" /> • Премиум: 1% = 0.05% • PFTT: 1% = 0.1%
                         </p>
 
                         <div className="grid gap-4">
@@ -162,30 +162,30 @@
                             ))}
                         </div>
 
-                        <div className="mt-6 md:mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-4 md:p-6">
-                            <h3 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4">Статистика</h3>
-                            <div className="grid grid-cols-2 gap-3 md:gap-4">
+                        <div className="mt-4 sm:mt-6 md:mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-3 sm:p-4 md:p-6">
+                            <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3 md:mb-4">Статистика</h3>
+                            <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                                 <div className="text-center">
-                                    <div className="text-2xl md:text-3xl font-bold text-blue-400">
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">
                                         {ownershipData.length}
                                     </div>
-                                    <div className="text-slate-400 text-xs md:text-sm">Всего владельцев</div>
+                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Всего владельцев</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl md:text-3xl font-bold text-purple-400">40</div>
-                                    <div className="text-slate-400 text-xs md:text-sm">Всего хаусов</div>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">40</div>
+                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Всего хаусов</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl md:text-3xl font-bold text-green-400">
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-400">
                                         {top30[0].totalPercent.toFixed(2)}%
                                     </div>
-                                    <div className="text-slate-400 text-xs md:text-sm">Максимум</div>
+                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Максимум</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-2xl md:text-3xl font-bold text-yellow-400">
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-400">
                                         {top30.reduce((sum, p) => sum + p.totalPercent, 0).toFixed(2)}%
                                     </div>
-                                    <div className="text-slate-400 text-xs md:text-sm">Топ-30 владеют</div>
+                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Топ-30 владеют</div>
                                 </div>
                             </div>
                         </div>
