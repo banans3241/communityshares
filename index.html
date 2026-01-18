@@ -8,6 +8,19 @@
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
+            background-size: 400% 400%;
+            background-attachment: fixed;
+        }
+        #root {
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
@@ -18,14 +31,14 @@
         function OwnershipCalculator() {
             const projects = ["PFTT Official", "Balabdu", "TOTS", "HereWeFuck", "UFTA"];
             
-            // Special conversion rates for specific houses/projects
-            const conversionRates = {
-                "PFTT Official": 0.1,  // 1% = 0.1% community
-                "Foot.Union": 0.05,    // 1% = 0.05% community
-                "Magnificent.Team": 0.05,
-                "Foot.Dragon": 0.05,
-                "Foot.Mix.Team": 0.05,
-                "The.Eventide": 0.05
+            // Weight multipliers for special houses/projects
+            const weights = {
+                "PFTT Official": 4,      // 4x weight
+                "Foot.Union": 2,         // 2x weight
+                "Magnificent.Team": 2,   // 2x weight
+                "Foot.Dragon": 2,        // 2x weight
+                "Foot.Mix.Team": 2,      // 2x weight
+                "The.Eventide": 2        // 2x weight
             };
             
             const houses = useMemo(() => ({
@@ -72,14 +85,19 @@
             }), []);
 
             const ownershipData = useMemo(() => {
+                // Calculate total weight of all houses
+                const totalWeight = Object.keys(houses).reduce((sum, houseName) => {
+                    return sum + (weights[houseName] || 1);
+                }, 0);
+                
                 const totalOwnership = {};
-                const defaultConversionRate = 0.025; // 1/40 for regular houses
 
                 Object.entries(houses).forEach(([houseName, owners]) => {
-                    const conversionRate = conversionRates[houseName] || defaultConversionRate;
+                    const houseWeight = weights[houseName] || 1;
+                    const housePercentOfCommunity = (houseWeight / totalWeight) * 100;
                     
                     Object.entries(owners).forEach(([owner, housePercent]) => {
-                        const communityPercent = housePercent * conversionRate;
+                        const communityPercent = (housePercent / 100) * housePercentOfCommunity;
                         if (!totalOwnership[owner]) {
                             totalOwnership[owner] = { total: 0, houses: [] };
                         }
@@ -87,7 +105,8 @@
                         totalOwnership[owner].houses.push({
                             name: houseName,
                             housePercent,
-                            communityPercent
+                            communityPercent,
+                            houseWeight
                         });
                     });
                 });
@@ -104,13 +123,13 @@
             const top30 = ownershipData.slice(0, 30);
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-6">
+                <div className="p-3 sm:p-6 pb-8 min-h-screen">
                     <div className="max-w-6xl mx-auto">
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 text-center px-2">
                             Топ-30 владельцев комьюнити
                         </h1>
                         <p className="text-slate-400 text-center mb-4 sm:mb-6 md:mb-8 text-[10px] sm:text-xs md:text-sm px-2 leading-relaxed">
-                            Хаусов + Проектов: 40 • Стандарт: 1% = 0.025%<br className="sm:hidden" /> • Премиум: 1% = 0.05% • PFTT: 1% = 0.1%
+                            40 хаусов • PFTT (4x вес) • Премиум хаусы (2x вес) • Остальные (1x вес)
                         </p>
 
                         <div className="grid gap-4">
@@ -162,30 +181,30 @@
                             ))}
                         </div>
 
-                        <div className="mt-4 sm:mt-6 md:mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-3 sm:p-4 md:p-6">
-                            <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3 md:mb-4">Статистика</h3>
-                            <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+                        <div className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 bg-slate-800/30 border border-slate-700 rounded sm:rounded-md md:rounded-lg p-2 sm:p-3 md:p-4 lg:p-6">
+                            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white mb-1.5 sm:mb-2 md:mb-3 lg:mb-4">Статистика</h3>
+                            <div className="grid grid-cols-2 gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
                                 <div className="text-center">
-                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">
+                                    <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-blue-400">
                                         {ownershipData.length}
                                     </div>
-                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Всего владельцев</div>
+                                    <div className="text-slate-400 text-[8px] sm:text-[9px] md:text-xs lg:text-sm">Всего владельцев</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">40</div>
-                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Всего хаусов</div>
+                                    <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-purple-400">40</div>
+                                    <div className="text-slate-400 text-[8px] sm:text-[9px] md:text-xs lg:text-sm">Всего хаусов</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-400">
+                                    <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-400">
                                         {top30[0].totalPercent.toFixed(2)}%
                                     </div>
-                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Максимум</div>
+                                    <div className="text-slate-400 text-[8px] sm:text-[9px] md:text-xs lg:text-sm">Максимум</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-400">
+                                    <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-yellow-400">
                                         {top30.reduce((sum, p) => sum + p.totalPercent, 0).toFixed(2)}%
                                     </div>
-                                    <div className="text-slate-400 text-[10px] sm:text-xs md:text-sm">Топ-30 владеют</div>
+                                    <div className="text-slate-400 text-[8px] sm:text-[9px] md:text-xs lg:text-sm">Топ-30 владеют</div>
                                 </div>
                             </div>
                         </div>
