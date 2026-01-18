@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Владельцы комьюнити</title>
+    <title>Топ-30 владельцев комьюнити</title>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
@@ -16,6 +16,18 @@
         const { useMemo } = React;
 
         function OwnershipCalculator() {
+            const projects = ["PFTT Official", "Balabdu", "TOTS", "HereWeFuck", "UFTA"];
+            
+            // Special conversion rates for specific houses/projects
+            const conversionRates = {
+                "PFTT Official": 0.1,  // 1% = 0.1% community
+                "Foot.Union": 0.05,    // 1% = 0.05% community
+                "Magnificent.Team": 0.05,
+                "Foot.Dragon": 0.05,
+                "Foot.Mix.Team": 0.05,
+                "The.Eventide": 0.05
+            };
+            
             const houses = useMemo(() => ({
                 "Foot.Inside": { "Кампус": 80, "Хайдер": 17, "Файн": 1, "Нфорс": 1, "Шейн": 1 },
                 "Foot.Rebel": { "Вансис": 50, "Ежик": 50 },
@@ -51,14 +63,21 @@
                 "Foot.Bavy": { "Янгер": 100 },
                 "Foot.Mix.Team": { "Волвер": 100 },
                 "Synemo": { "Настя": 100 },
-                "Foot.Graceful": { "Зерокс": 50, "Ренат": 50 }
+                "Foot.Graceful": { "Зерокс": 50, "Ренат": 50 },
+                "PFTT Official": { "Зере": 100 },
+                "Balabdu": { "Лонти": 40, "Вареник": 40, "Вовчик": 20 },
+                "TOTS": { "Бьюти": 100 },
+                "HereWeFuck": { "Джудеб": 70, "Зевс": 30 },
+                "UFTA": { "Вареник": 100 }
             }), []);
 
             const ownershipData = useMemo(() => {
                 const totalOwnership = {};
-                const conversionRate = 1 / 35;
+                const defaultConversionRate = 0.025; // 1/40 for regular houses
 
                 Object.entries(houses).forEach(([houseName, owners]) => {
+                    const conversionRate = conversionRates[houseName] || defaultConversionRate;
+                    
                     Object.entries(owners).forEach(([owner, housePercent]) => {
                         const communityPercent = housePercent * conversionRate;
                         if (!totalOwnership[owner]) {
@@ -87,11 +106,11 @@
             return (
                 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
                     <div className="max-w-6xl mx-auto">
-                        <h1 className="text-4xl font-bold text-white mb-2 text-center">
+                        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 text-center px-4">
                             Топ-30 владельцев комьюнити
                         </h1>
-                        <p className="text-slate-400 text-center mb-8">
-                            Общее количество хаусов: 35 • Конверсия: 1% хауса = {(1/35 * 100).toFixed(8)}% комьюнити
+                        <p className="text-slate-400 text-center mb-6 md:mb-8 text-xs sm:text-sm px-4">
+                            Хаусов: 40 • Стандарт: 1% = 0.025% • Премиум: 1% = 0.05% • PFTT: 1% = 0.1%
                         </p>
 
                         <div className="grid gap-4">
@@ -128,7 +147,9 @@
                                             >
                                                 <span className="text-slate-300 font-medium">{house.name}</span>
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-blue-400">{house.housePercent}% хауса</span>
+                                                    <span className="text-blue-400">
+                                                        {house.housePercent}% {projects.includes(house.name) ? 'проекта' : 'хауса'}
+                                                    </span>
                                                     <span className="text-slate-600">→</span>
                                                     <span className="text-purple-400 font-mono">
                                                         {house.communityPercent.toFixed(6)}% комьюнити
@@ -141,30 +162,30 @@
                             ))}
                         </div>
 
-                        <div className="mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-6">
-                            <h3 className="text-xl font-bold text-white mb-4">Статистика</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="mt-6 md:mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-4 md:p-6">
+                            <h3 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4">Статистика</h3>
+                            <div className="grid grid-cols-2 gap-3 md:gap-4">
                                 <div className="text-center">
-                                    <div className="text-3xl font-bold text-blue-400">
+                                    <div className="text-2xl md:text-3xl font-bold text-blue-400">
                                         {ownershipData.length}
                                     </div>
-                                    <div className="text-slate-400 text-sm">Всего владельцев</div>
+                                    <div className="text-slate-400 text-xs md:text-sm">Всего владельцев</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-3xl font-bold text-purple-400">35</div>
-                                    <div className="text-slate-400 text-sm">Всего хаусов</div>
+                                    <div className="text-2xl md:text-3xl font-bold text-purple-400">40</div>
+                                    <div className="text-slate-400 text-xs md:text-sm">Всего хаусов</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-3xl font-bold text-green-400">
+                                    <div className="text-2xl md:text-3xl font-bold text-green-400">
                                         {top30[0].totalPercent.toFixed(2)}%
                                     </div>
-                                    <div className="text-slate-400 text-sm">Максимум</div>
+                                    <div className="text-slate-400 text-xs md:text-sm">Максимум</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-3xl font-bold text-yellow-400">
+                                    <div className="text-2xl md:text-3xl font-bold text-yellow-400">
                                         {top30.reduce((sum, p) => sum + p.totalPercent, 0).toFixed(2)}%
                                     </div>
-                                    <div className="text-slate-400 text-sm">Топ-30 владеют</div>
+                                    <div className="text-slate-400 text-xs md:text-sm">Топ-30 владеют</div>
                                 </div>
                             </div>
                         </div>
